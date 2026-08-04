@@ -11,7 +11,6 @@ import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType, PluginNative } from "@utils/types";
 import type { Message } from "@vencord/discord-types";
 
-import { mountBotStatus, unmountBotStatus } from "./botStatus";
 import { startAtariBreakout, stopAtariBreakout } from "./breakout";
 import { mountChatPanel, unmountChatPanel } from "./chatPanel";
 
@@ -203,20 +202,6 @@ const settings = definePluginSettings({
         description: "URL de l'API chat de Boby",
         default: "https://jah.qdnx.fr/api/chat",
     },
-    botStatusEnabled: {
-        type: OptionType.BOOLEAN,
-        description: "Affiche un badge indiquant si le bot Boby est en ligne",
-        default: false,
-        onChange(newValue: boolean) {
-            if (newValue) mountBotStatus(() => settings.store.botStatusUserId);
-            else unmountBotStatus();
-        },
-    },
-    botStatusUserId: {
-        type: OptionType.STRING,
-        description: "ID Discord du compte bot Boby a surveiller",
-        default: "1522215686569590915",
-    },
 });
 
 export default definePlugin({
@@ -229,16 +214,12 @@ export default definePlugin({
         if (settings.store.chatPanelEnabled) {
             mountChatPanel(() => settings.store.chatApiUrl);
         }
-        if (settings.store.botStatusEnabled) {
-            mountBotStatus(() => settings.store.botStatusUserId);
-        }
     },
 
     stop() {
         stopMadeHeaven();
         stopAtariBreakout();
         unmountChatPanel();
-        unmountBotStatus();
     },
 
     flux: {
