@@ -207,6 +207,10 @@ const settings = definePluginSettings({
         type: OptionType.BOOLEAN,
         description: "Affiche le bouton de chat flottant pour parler a Boby n'importe quand",
         default: true,
+        onChange(newValue: boolean) {
+            if (newValue) mountChatPanel(() => settings.store.chatApiUrl);
+            else unmountChatPanel();
+        },
     },
     chatApiUrl: {
         type: OptionType.STRING,
@@ -216,7 +220,11 @@ const settings = definePluginSettings({
     botStatusEnabled: {
         type: OptionType.BOOLEAN,
         description: "Affiche un badge indiquant si le bot Boby est en ligne",
-        default: true,
+        default: false,
+        onChange(newValue: boolean) {
+            if (newValue) mountBotStatus(() => settings.store.botStatusUserId);
+            else unmountBotStatus();
+        },
     },
     botStatusUserId: {
         type: OptionType.STRING,
