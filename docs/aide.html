@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tutoriel d'installation — Boby</title>
+<meta name="description" content="Tutoriel pas à pas pour installer le plugin Equicord Boby.">
+<style>
+  :root {
+    --bg: #0b0a14;
+    --bg-raised: #14121f;
+    --bg-raised-2: #1a1729;
+    --ink: #e8e4f3;
+    --ink-dim: #9691ac;
+    --ink-faint: #625d7a;
+    --accent: #ffa94d;
+    --accent-ink: #1a0f00;
+    --accent-2: #b9c6ff;
+    --line: #2a2740;
+    --line-soft: #201d33;
+    --ok: #7ee2a8;
+    --radius: 10px;
+    --mono: "JetBrains Mono", "Cascadia Code", "SF Mono", ui-monospace, Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color-scheme: dark;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f3f1f8;
+      --bg-raised: #ffffff;
+      --bg-raised-2: #ece8f6;
+      --ink: #201c33;
+      --ink-dim: #5b5675;
+      --ink-faint: #8a86a0;
+      --accent: #d97706;
+      --accent-ink: #fff7ec;
+      --accent-2: #4c5fd1;
+      --line: #dcd7ee;
+      --line-soft: #e7e3f3;
+      --ok: #1f9d5c;
+      color-scheme: light;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--accent); color: var(--accent-ink); }
+
+  a { color: var(--accent-2); }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- Top bar ---------- */
+
+  .topbar {
+    border-bottom: 1px solid var(--line-soft);
+    padding: 20px 0;
+  }
+  .topbar .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .back-link {
+    font-family: var(--mono);
+    font-size: .85rem;
+    color: var(--ink-dim);
+    text-decoration: none;
+  }
+  .back-link:hover { color: var(--accent); }
+  .brand {
+    font-family: var(--mono);
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: .95rem;
+  }
+
+  /* ---------- Header ---------- */
+
+  header.page-head {
+    padding: 56px 0 44px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-weight: 700;
+    margin: 0 0 14px;
+    text-wrap: balance;
+  }
+  .lede { color: var(--ink-dim); max-width: 62ch; font-size: 1.05rem; }
+
+  /* ---------- Method sections ---------- */
+
+  .method {
+    padding: 56px 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .method:last-of-type { border-bottom: none; }
+
+  .method-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .method-head h2 { font-size: 1.4rem; margin: 0; }
+  .method-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ok);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 3px 10px;
+  }
+  .method-note { color: var(--ink-dim); font-size: .95rem; margin: 0 0 32px; max-width: 62ch; }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 18px;
+  }
+
+  .step-num {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--accent);
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-raised);
+  }
+
+  .step-body h3 {
+    margin: 6px 0 6px;
+    font-size: 1rem;
+  }
+  .step-body p {
+    margin: 0 0 14px;
+    color: var(--ink-dim);
+    font-size: .93rem;
+  }
+  .step-body code {
+    font-family: var(--mono);
+    font-size: .85em;
+    background: var(--bg-raised-2);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--accent-2);
+  }
+
+  .shot-frame {
+    background: #08070d;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px 10px 14px;
+    max-width: 480px;
+    box-shadow: 0 20px 40px -20px rgba(0,0,0,.5);
+  }
+  @media (prefers-color-scheme: light) {
+    .shot-frame { box-shadow: 0 20px 40px -24px rgba(30,20,60,.25); }
+  }
+
+  .shot-bezel-dots { display: flex; gap: 5px; padding: 4px 4px 10px; }
+  .shot-bezel-dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+
+  .shot-screen {
+    aspect-ratio: 16 / 10;
+    border-radius: 6px;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.02) 0px, rgba(255,255,255,.02) 1px, transparent 1px, transparent 3px),
+      var(--bg-raised-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--ink-faint);
+    overflow: hidden;
+    position: relative;
+  }
+  .shot-screen img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .shot-screen .placeholder-icon {
+    font-family: var(--mono);
+    font-size: 20px;
+    color: var(--ink-faint);
+    border: 1px dashed var(--line);
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 8px;
+  }
+  .shot-screen .placeholder-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .04em;
+  }
+
+  .code-block {
+    position: relative;
+    background: #08070d;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    max-width: 560px;
+  }
+  @media (prefers-color-scheme: light) { .code-block { background: #14101f; } }
+  .code-block pre {
+    margin: 0;
+    padding: 16px 46px 16px 16px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: #d8d3ea;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .code-block .prompt { color: var(--accent); }
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 5px 9px;
+    cursor: pointer;
+  }
+  .copy-btn:hover { color: var(--ink); border-color: var(--ink-faint); }
+  .copy-btn.copied { color: var(--ok); border-color: var(--ok); }
+
+  .howto-note {
+    margin-top: 40px;
+    font-size: .9rem;
+    color: var(--ink-dim);
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+  }
+  .howto-note code {
+    font-family: var(--mono);
+    background: var(--bg-raised-2);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: .85em;
+  }
+
+  footer {
+    border-top: 1px solid var(--line-soft);
+    padding: 30px 0 50px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a class="back-link" href="index.html">← Retour</a>
+    <a class="brand" href="index.html">BOBY</a>
+  </div>
+</div>
+
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">Tutoriel</p>
+    <h1>Installer Boby, étape par étape</h1>
+    <p class="lede">Choisis ta méthode ci-dessous. La première est recommandée si tu as déjà Equicord installé en build source.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="method">
+    <div class="method-head">
+      <h2>Méthode 1 — Panneau UserPlugins</h2>
+      <span class="method-tag">Recommandé</span>
+    </div>
+    <p class="method-note">Depuis Discord, sans toucher au terminal.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Ouvre les réglages Discord</h3>
+          <p>Assure-toi qu'Equicord est bien installé en build source (voir la page d'accueil si ce n'est pas encore fait).</p>
+          <div class="shot-frame">
+            <div class="shot-bezel-dots"><span></span><span></span><span></span></div>
+            <div class="shot-screen">
+              <!-- Remplace par : <img src="tuto-1-reglages.png" alt="Ouvrir les reglages Discord"> -->
+              <div class="placeholder-icon">▢</div>
+              <div class="placeholder-label">tuto-1-reglages.png</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Va dans l'onglet UserPlugins</h3>
+          <p>Il se trouve dans la liste de gauche des réglages Equicord, section <code>UserPlugins</code>.</p>
+          <div class="shot-frame">
+            <div class="shot-bezel-dots"><span></span><span></span><span></span></div>
+            <div class="shot-screen">
+              <!-- Remplace par : <img src="tuto-2-onglet.png" alt="Onglet UserPlugins"> -->
+              <div class="placeholder-icon">▢</div>
+              <div class="placeholder-label">tuto-2-onglet.png</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Colle l'URL du dépôt et installe</h3>
+          <div class="code-block">
+            <button class="copy-btn" data-copy="https://github.com/jahsohsaniOFF/Boby">Copier</button>
+            <pre><span class="prompt">#</span> URL à coller dans le champ d'installation
+https://github.com/jahsohsaniOFF/Boby</pre>
+          </div>
+          <div class="shot-frame" style="margin-top:14px;">
+            <div class="shot-bezel-dots"><span></span><span></span><span></span></div>
+            <div class="shot-screen">
+              <!-- Remplace par : <img src="tuto-3-installation.png" alt="Coller l'URL et installer"> -->
+              <div class="placeholder-icon">▢</div>
+              <div class="placeholder-label">tuto-3-installation.png</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>C'est fait</h3>
+          <p>Discord relance la build tout seul. Les futures mises à jour apparaîtront dans ce même onglet, avec une notification quand une nouvelle version sort.</p>
+          <div class="shot-frame">
+            <div class="shot-bezel-dots"><span></span><span></span><span></span></div>
+            <div class="shot-screen">
+              <!-- Remplace par : <img src="tuto-4-termine.png" alt="Plugin installe et actif"> -->
+              <div class="placeholder-icon">▢</div>
+              <div class="placeholder-label">tuto-4-termine.png</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="method">
+    <div class="method-head">
+      <h2>Méthode 2 — Manuelle</h2>
+    </div>
+    <p class="method-note">Si tu préfères tout faire depuis un terminal. Pas besoin de captures ici, ce ne sont que des commandes.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Clone, build, injecte</h3>
+          <p>Depuis la racine de ta copie d'Equicord :</p>
+          <div class="code-block">
+            <button class="copy-btn" data-copy="git clone https://github.com/jahsohsaniOFF/Boby.git src/userplugins/boby&#10;pnpm build --dev&#10;pnpm inject">Copier</button>
+            <pre><span class="prompt">$</span> git clone https://github.com/jahsohsaniOFF/Boby.git src/userplugins/boby
+<span class="prompt">$</span> pnpm build --dev
+<span class="prompt">$</span> pnpm inject</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Pour mettre à jour plus tard</h3>
+          <div class="code-block">
+            <button class="copy-btn" data-copy="cd src/userplugins/boby&#10;git pull&#10;cd ../../..&#10;pnpm build --dev&#10;pnpm inject">Copier</button>
+            <pre><span class="prompt">$</span> cd src/userplugins/boby
+<span class="prompt">$</span> git pull
+<span class="prompt">$</span> cd ../../..
+<span class="prompt">$</span> pnpm build --dev
+<span class="prompt">$</span> pnpm inject</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p class="howto-note">Pour ajouter une capture : remplace le contenu d'un bloc <code>.shot-screen</code> par une balise <code>&lt;img src="ton-fichier.png" alt="..."&gt;</code>, et mets le fichier dans <code>docs/</code> à côté de <code>aide.html</code>.</p>
+
+</div>
+
+<footer>boby — fait par jahsohsani</footer>
+
+<script>
+  document.querySelectorAll(".copy-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var text = btn.getAttribute("data-copy") || "";
+      var restore = btn.textContent;
+      function done(ok) {
+        btn.textContent = ok ? "Copié" : "Erreur";
+        btn.classList.toggle("copied", ok);
+        setTimeout(function () {
+          btn.textContent = restore;
+          btn.classList.remove("copied");
+        }, 1400);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+      } else {
+        done(false);
+      }
+    });
+  });
+</script>
+</body>
+</html>
