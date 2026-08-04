@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Boby — plugin Equicord</title>
-<meta name="description" content="Site de présentation et d'installation du plugin Equicord Boby, avec ses easter eggs cachés.">
+<meta name="description" content="Site de présentation et d'installation du plugin Equicord Boby.">
 <style>
   :root {
     --bg: #0b0a14;
@@ -267,20 +267,12 @@
     margin: 0;
   }
 
-  .secret-note {
-    margin-top: 22px;
-    font-family: var(--mono);
-    font-size: .85rem;
-    color: var(--ink-faint);
-    border-left: 2px solid var(--accent);
-    padding-left: 14px;
-  }
-
   /* ---------- Screenshots ---------- */
 
   .shots {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 440px));
+    justify-content: center;
     gap: 26px;
   }
 
@@ -572,7 +564,7 @@
   <div class="hero-content">
     <span class="eyebrow">Plugin Equicord non-officiel</span>
     <h1 class="title">BOBY</h1>
-    <p class="tagline">Un compagnon qui vit dans ton Discord. Certaines de ses fonctionnalités sont documentées. D'autres se déclenchent seulement si tu dis le bon mot.</p>
+    <p class="tagline">Un compagnon qui vit dans ton Discord. Parle-lui n'importe quand, depuis n'importe quel salon, via un panneau toujours accessible.</p>
     <p class="boot" id="boot-text" aria-hidden="true"></p>
     <div class="cta-row">
       <a class="btn btn-primary" href="#installer">Installer Boby</a>
@@ -592,30 +584,23 @@
 
     <div class="feature-grid">
       <div class="feature">
-        <div class="glyph">01_chat</div>
+        <div class="glyph">chat</div>
         <h3>Un fil ouvert avec Boby</h3>
-        <p>Un bouton toujours accessible sur le bord de l'écran ouvre une conversation avec Boby, sans passer par un salon Discord.</p>
+        <p>Un bouton toujours accessible sur le bord de l'écran ouvre une conversation avec Boby, sans passer par un salon Discord. Tu peux le déplacer où tu veux à l'écran.</p>
       </div>
       <div class="feature">
-        <div class="glyph">02_????</div>
-        <h3>Des easter eggs cachés</h3>
-        <p>Certaines phrases, tapées au bon endroit, déclenchent des effets visuels qui n'apparaissent nulle part dans cette page.</p>
-      </div>
-      <div class="feature">
-        <div class="glyph">03_maj</div>
+        <div class="glyph">maj</div>
         <h3>Mises à jour en un clic</h3>
         <p>Une fois installé, Discord te prévient quand une nouvelle version sort et l'applique sans repasser par le terminal.</p>
       </div>
     </div>
-
-    <p class="secret-note">$ les déclencheurs ne sont pas listés ici. À toi de les trouver.</p>
   </section>
 
   <section id="captures" class="tight">
     <div class="section-head">
       <p class="kicker">Aperçu</p>
-      <h2>Quelques captures</h2>
-      <p class="lede">Les cadres ci-dessous sont vides pour l'instant.</p>
+      <h2>Le panneau de chat</h2>
+      <p class="lede">Le cadre ci-dessous est vide pour l'instant.</p>
     </div>
 
     <div class="shots">
@@ -628,33 +613,11 @@
             <div class="placeholder-label">capture-chat.png</div>
           </div>
         </div>
-        <figcaption>// le panneau de chat</figcaption>
-      </figure>
-      <figure class="shot">
-        <div class="shot-frame">
-          <div class="shot-bezel-dots"><span></span><span></span><span></span></div>
-          <div class="shot-screen">
-            <!-- Remplace ce bloc par : <img src="capture-secret-1.png" alt="Easter egg en action"> -->
-            <div class="placeholder-icon">▢</div>
-            <div class="placeholder-label">capture-secret-1.png</div>
-          </div>
-        </div>
-        <figcaption>// un des secrets</figcaption>
-      </figure>
-      <figure class="shot">
-        <div class="shot-frame">
-          <div class="shot-bezel-dots"><span></span><span></span><span></span></div>
-          <div class="shot-screen">
-            <!-- Remplace ce bloc par : <img src="capture-secret-2.png" alt="Easter egg en action"> -->
-            <div class="placeholder-icon">▢</div>
-            <div class="placeholder-label">capture-secret-2.png</div>
-          </div>
-        </div>
-        <figcaption>// un autre secret</figcaption>
+        <figcaption>// le panneau de chat, ouvert</figcaption>
       </figure>
     </div>
 
-    <p class="howto-note">Pour ajouter une image : remplace le contenu d'un bloc <code>.shot-screen</code> par une balise <code>&lt;img src="ton-fichier.png" alt="..."&gt;</code> — le cadre et l'ombrage s'adaptent automatiquement.</p>
+    <p class="howto-note">Pour ajouter une image : remplace le contenu du bloc <code>.shot-screen</code> par une balise <code>&lt;img src="ton-fichier.png" alt="..."&gt;</code> — le cadre et l'ombrage s'adaptent automatiquement.</p>
   </section>
 
   <section id="installer">
@@ -760,7 +723,7 @@ https://github.com/jahsohsaniOFF/Boby</pre>
     var lines = [
       "$ boby --status",
       "> panneau de chat ......... actif",
-      "> easter eggs .............. verrouilles",
+      "> mises a jour auto ....... actif",
       "> pret."
     ];
 
@@ -791,7 +754,7 @@ https://github.com/jahsohsaniOFF/Boby</pre>
     }
     typeBoot();
 
-    /* ---- ambient orbit canvas (sun / earth / moon, unexplained) ---- */
+    /* ---- ambient starfield ---- */
     var canvas = document.getElementById("orbit-canvas");
     if (canvas && canvas.getContext) {
       var ctx = canvas.getContext("2d");
@@ -820,23 +783,6 @@ https://github.com/jahsohsaniOFF/Boby</pre>
         });
       }
 
-      var accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#ffa94d";
-      var moonColor = getComputedStyle(document.documentElement).getPropertyValue("--accent-2").trim() || "#b9c6ff";
-
-      var cx, cy, sunR, earthOrbitR, earthR, moonOrbitR, moonR;
-
-      function layout() {
-        cx = w * 0.82;
-        cy = h * 0.28;
-        sunR = Math.max(10, Math.min(w, h) * 0.02);
-        earthOrbitR = sunR * 3.4;
-        earthR = sunR * 0.42;
-        moonOrbitR = earthR * 2.6;
-        moonR = earthR * 0.4;
-      }
-      layout();
-      window.addEventListener("resize", layout);
-
       var t0 = performance.now();
 
       function draw(now) {
@@ -853,38 +799,6 @@ https://github.com/jahsohsaniOFF/Boby</pre>
           ctx.fill();
         }
         ctx.globalAlpha = 1;
-
-        var earthAngle = reduceMotion ? 0.6 : t * 0.18;
-        var ex = cx + Math.cos(earthAngle) * earthOrbitR;
-        var ey = cy + Math.sin(earthAngle) * earthOrbitR * 0.55;
-
-        ctx.globalAlpha = .18;
-        ctx.strokeStyle = moonColor;
-        ctx.beginPath();
-        ctx.ellipse(cx, cy, earthOrbitR, earthOrbitR * 0.55, 0, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.globalAlpha = 1;
-
-        ctx.fillStyle = accent;
-        ctx.shadowColor = accent;
-        ctx.shadowBlur = sunR * 1.6;
-        ctx.beginPath();
-        ctx.arc(cx, cy, sunR, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
-
-        ctx.fillStyle = "#6ec6ff";
-        ctx.beginPath();
-        ctx.arc(ex, ey, earthR, 0, Math.PI * 2);
-        ctx.fill();
-
-        var moonSpeed = reduceMotion ? 2.1 : t * 3.4;
-        var mx = ex + Math.cos(moonSpeed) * moonOrbitR;
-        var my = ey + Math.sin(moonSpeed) * moonOrbitR * 0.6;
-        ctx.fillStyle = moonColor;
-        ctx.beginPath();
-        ctx.arc(mx, my, moonR, 0, Math.PI * 2);
-        ctx.fill();
 
         if (!reduceMotion) requestAnimationFrame(draw);
       }
