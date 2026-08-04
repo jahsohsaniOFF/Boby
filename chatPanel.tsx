@@ -4,6 +4,8 @@
  * WEB_ENABLED=true, endpoint POST /api/chat).
  */
 
+import { makeDraggable } from "./draggable";
+
 interface ChatMessage {
     role: "user" | "assistant";
     content: string;
@@ -11,6 +13,7 @@ interface ChatMessage {
 
 let panelEl: HTMLElement | null = null;
 let toggleEl: HTMLElement | null = null;
+let cleanupDrag: (() => void) | null = null;
 let history: ChatMessage[] = [];
 let getApiUrl: () => string = () => "https://jah.qdnx.fr/api/chat";
 
@@ -229,9 +232,12 @@ export function mountChatPanel(apiUrlGetter: () => string) {
     toggle.addEventListener("click", togglePanel);
     document.body.appendChild(toggle);
     toggleEl = toggle;
+    cleanupDrag = makeDraggable(toggle, "boby-chat-toggle-pos");
 }
 
 export function unmountChatPanel() {
+    cleanupDrag?.();
+    cleanupDrag = null;
     toggleEl?.remove();
     toggleEl = null;
     panelEl?.remove();

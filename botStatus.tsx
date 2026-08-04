@@ -5,6 +5,8 @@
 
 import { PresenceStore } from "@webpack/common";
 
+import { makeDraggable } from "./draggable";
+
 const STATUS_LABELS: Record<string, string> = {
     online: "En ligne",
     idle: "Inactif",
@@ -44,8 +46,9 @@ function ensureStyles() {
             font-family: sans-serif;
             font-size: 11.5px;
             color: #e8e4f3;
-            pointer-events: none;
+            pointer-events: auto;
             backdrop-filter: blur(4px);
+            user-select: none;
         }
         .boby-status-dot {
             width: 8px;
@@ -60,6 +63,7 @@ function ensureStyles() {
 
 let badgeEl: HTMLElement | null = null;
 let listener: (() => void) | null = null;
+let cleanupDrag: (() => void) | null = null;
 let getUserId: () => string = () => "";
 
 function updateBadge() {
@@ -97,6 +101,7 @@ export function mountBotStatus(userIdGetter: () => string) {
     badge.innerHTML = '<span class="boby-status-dot"></span><span class="boby-status-label"></span>';
     document.body.appendChild(badge);
     badgeEl = badge;
+    cleanupDrag = makeDraggable(badge, "boby-status-badge-pos");
 
     updateBadge();
     listener = updateBadge;
@@ -108,6 +113,8 @@ export function unmountBotStatus() {
         PresenceStore.removeChangeListener(listener);
         listener = null;
     }
+    cleanupDrag?.();
+    cleanupDrag = null;
     badgeEl?.remove();
     badgeEl = null;
 }
