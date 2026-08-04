@@ -14,7 +14,7 @@ import type { Message } from "@vencord/discord-types";
 import { startAtariBreakout, stopAtariBreakout } from "./breakout";
 import { mountChatPanel, unmountChatPanel } from "./chatPanel";
 
-const Native = VencordNative.pluginHelpers.BobyEasterEggs as PluginNative<typeof import("./native")>;
+const Native = VencordNative.pluginHelpers.Boby as PluginNative<typeof import("./native")>;
 
 interface EasterEgg {
     name: string;
@@ -215,8 +215,8 @@ const settings = definePluginSettings({
 });
 
 export default definePlugin({
-    name: "BobyEasterEggs",
-    description: "Affiche des effets visuels quand certains mots-cles apparaissent dans le chat (ex: 'made in heaven', 'atari breakout'), et un panneau de chat flottant pour parler a Boby.",
+    name: "Boby",
+    description: "Des easter eggs caches dans le chat, et un panneau flottant pour parler a Boby. A toi de les trouver.",
     authors: [{ name: "jahsohsani", id: 0n }],
     settings,
 
