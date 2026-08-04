@@ -105,6 +105,10 @@ function ensureStyles() {
     document.head.appendChild(style);
 }
 
+// Valeurs fixes (pas de reglage visible pour ne pas vendre la meche des easter eggs).
+const ORBIT_ACCELERATION = 0.15;
+const ORBIT_MAX_SPEED = 24;
+
 let pdpUrlPromise: Promise<string> | null = null;
 
 function getPdpUrl() {
@@ -158,10 +162,7 @@ async function startMadeHeaven() {
         lastTime = now;
         const elapsedSec = (now - startTime) / 1000;
 
-        const speedRadPerSec = Math.min(
-            settings.store.orbitMaxSpeed,
-            1 + elapsedSec * settings.store.orbitAcceleration
-        );
+        const speedRadPerSec = Math.min(ORBIT_MAX_SPEED, 1 + elapsedSec * ORBIT_ACCELERATION);
         angleRad += speedRadPerSec * dtSec;
         moonPivot.style.transform = `rotate(${angleRad}rad)`;
 
@@ -188,21 +189,6 @@ const easterEggs: EasterEgg[] = [
 ];
 
 const settings = definePluginSettings({
-    enabled: {
-        type: OptionType.BOOLEAN,
-        description: "Active les easter eggs visuels",
-        default: true,
-    },
-    orbitAcceleration: {
-        type: OptionType.NUMBER,
-        description: "Acceleration de la lune autour de la terre (rad/s par seconde ecoulee) pour 'made in heaven'",
-        default: 0.15,
-    },
-    orbitMaxSpeed: {
-        type: OptionType.NUMBER,
-        description: "Vitesse de rotation max de la lune (rad/s) pour 'made in heaven'",
-        default: 24,
-    },
     chatPanelEnabled: {
         type: OptionType.BOOLEAN,
         description: "Affiche le bouton de chat flottant pour parler a Boby n'importe quand",
@@ -263,7 +249,6 @@ export default definePlugin({
         // l'utilisateur dans ses reponses ("tu veux dire quoi par 'atari breakout' ?"),
         // ce qui remachait le regex et refermait le jeu juste apres l'avoir ouvert.
         MESSAGE_CREATE({ message }: { message: Message; }) {
-            if (!settings.store.enabled) return;
             if (message?.author?.bot) return;
             if (!message?.content || !message?.id) return;
             if (message.id === lastHandledMessageId) return;

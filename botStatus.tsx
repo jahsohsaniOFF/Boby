@@ -33,8 +33,8 @@ function ensureStyles() {
     style.textContent = `
         .boby-status-badge {
             position: fixed;
-            left: 12px;
-            bottom: 12px;
+            right: 12px;
+            bottom: 16px;
             z-index: 2147483643;
             display: flex;
             align-items: center;
