@@ -61,6 +61,13 @@ function ensureStyles() {
     document.head.appendChild(style);
 }
 
+// Filet de securite: si le reglage botStatusUserId n'est pas encore resolu
+// (store pas encore hydrate au tout premier lancement, valeur videe par erreur,
+// etc.), on retombe sur l'ID connu plutot que de masquer le badge entier -
+// c'est ce qui rendait le badge invisible ET impossible a cliquer/deplacer
+// (display: none n'a pas de boite de layout, donc pas de zone cliquable).
+const FALLBACK_BOT_USER_ID = "1522215686569590915";
+
 let badgeEl: HTMLElement | null = null;
 let listener: (() => void) | null = null;
 let cleanupDrag: (() => void) | null = null;
@@ -69,14 +76,15 @@ let getUserId: () => string = () => "";
 function updateBadge() {
     if (!badgeEl) return;
 
-    const userId = getUserId().trim();
-    if (!userId) {
-        badgeEl.style.display = "none";
-        return;
-    }
-    badgeEl.style.display = "flex";
+    const userId = (getUserId() || "").trim() || FALLBACK_BOT_USER_ID;
 
-    const status = PresenceStore.getStatus(userId) || "offline";
+    let status = "offline";
+    try {
+        status = PresenceStore.getStatus(userId) || "offline";
+    } catch (error) {
+        console.error("[Boby] Impossible de lire le statut du bot:", error);
+    }
+
     const dot = badgeEl.querySelector<HTMLElement>(".boby-status-dot")!;
     const label = badgeEl.querySelector<HTMLElement>(".boby-status-label")!;
     const color = STATUS_COLORS[status] ?? STATUS_COLORS.offline;
@@ -94,18 +102,22 @@ export function mountBotStatus(userIdGetter: () => string) {
         return;
     }
 
-    ensureStyles();
+    try {
+        ensureStyles();
 
-    const badge = document.createElement("div");
-    badge.className = "boby-status-badge";
-    badge.innerHTML = '<span class="boby-status-dot"></span><span class="boby-status-label"></span>';
-    document.body.appendChild(badge);
-    badgeEl = badge;
-    cleanupDrag = makeDraggable(badge, "boby-status-badge-pos");
+        const badge = document.createElement("div");
+        badge.className = "boby-status-badge";
+        badge.innerHTML = '<span class="boby-status-dot"></span><span class="boby-status-label"></span>';
+        document.body.appendChild(badge);
+        badgeEl = badge;
+        cleanupDrag = makeDraggable(badge, "boby-status-badge-pos");
 
-    updateBadge();
-    listener = updateBadge;
-    PresenceStore.addChangeListener(listener);
+        updateBadge();
+        listener = updateBadge;
+        PresenceStore.addChangeListener(listener);
+    } catch (error) {
+        console.error("[Boby] Impossible d'afficher le badge de statut:", error);
+    }
 }
 
 export function unmountBotStatus() {
