@@ -11,6 +11,7 @@ import { definePluginSettings } from "@api/Settings";
 import definePlugin, { OptionType, PluginNative } from "@utils/types";
 import type { Message } from "@vencord/discord-types";
 
+import { mountBadge, unmountBadge } from "./badge";
 import { startAtariBreakout, stopAtariBreakout } from "./breakout";
 import { mountChatPanel, unmountChatPanel } from "./chatPanel";
 
@@ -214,12 +215,14 @@ export default definePlugin({
         if (settings.store.chatPanelEnabled) {
             mountChatPanel(() => settings.store.chatApiUrl);
         }
+        mountBadge();
     },
 
     stop() {
         stopMadeHeaven();
         stopAtariBreakout();
         unmountChatPanel();
+        unmountBadge();
     },
 
     flux: {
