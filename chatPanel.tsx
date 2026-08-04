@@ -12,7 +12,7 @@ interface ChatMessage {
 let panelEl: HTMLElement | null = null;
 let toggleEl: HTMLElement | null = null;
 let history: ChatMessage[] = [];
-let getApiUrl: () => string = () => "http://127.0.0.1:8787/api/chat";
+let getApiUrl: () => string = () => "https://jah.qdnx.fr/api/chat";
 
 const STYLE_ID = "boby-chat-panel-style";
 
@@ -159,7 +159,7 @@ async function sendMessage(messagesEl: HTMLElement, text: string) {
         pendingEl.classList.remove("pending");
         if (res.ok) history.push({ role: "assistant", content: reply });
     } catch {
-        pendingEl.textContent = "Boby dort, son serveur local ne repond pas.";
+        pendingEl.textContent = "Boby dort, son serveur ne repond pas.";
         pendingEl.classList.remove("pending");
     } finally {
         messagesEl.scrollTop = messagesEl.scrollHeight;
