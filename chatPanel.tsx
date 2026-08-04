@@ -43,6 +43,16 @@ function ensureChatStyles() {
             align-items: center;
             justify-content: center;
         }
+        .boby-chat-toggle {
+            transition: filter 150ms ease, box-shadow 150ms ease;
+        }
+        .boby-chat-toggle:hover {
+            filter: brightness(1.12);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.35);
+        }
+        .boby-chat-toggle:active {
+            filter: brightness(0.92);
+        }
         .boby-chat-panel {
             position: fixed;
             top: 0;
@@ -56,6 +66,17 @@ function ensureChatStyles() {
             display: flex;
             flex-direction: column;
             font-family: sans-serif;
+            transform: translateX(0);
+            opacity: 1;
+            transition: transform 200ms ease, opacity 200ms ease;
+        }
+        .boby-chat-panel.boby-panel-enter {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        .boby-chat-panel.boby-panel-closing {
+            transform: translateX(100%);
+            opacity: 0;
         }
         .boby-chat-header {
             padding: 12px 14px;
@@ -89,6 +110,11 @@ function ensureChatStyles() {
             line-height: 1.4;
             white-space: pre-wrap;
             word-break: break-word;
+            animation: boby-msg-in 180ms ease;
+        }
+        @keyframes boby-msg-in {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .boby-chat-msg.user {
             align-self: flex-end;
@@ -102,7 +128,31 @@ function ensureChatStyles() {
         }
         .boby-chat-msg.pending {
             opacity: 0.6;
-            font-style: italic;
+        }
+        .boby-typing-dots {
+            display: inline-flex;
+            gap: 3px;
+            align-items: center;
+            height: 14px;
+        }
+        .boby-typing-dots span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: boby-typing-bounce 1.1s infinite ease-in-out;
+        }
+        .boby-typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+        .boby-typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes boby-typing-bounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .boby-chat-panel { transition: none; }
+            .boby-chat-msg { animation: none; }
+            .boby-typing-dots span { animation: none; }
+            .boby-chat-toggle { transition: none; }
         }
         .boby-chat-input-row {
             display: flex;
@@ -137,10 +187,19 @@ function ensureChatStyles() {
 function appendMessage(container: HTMLElement, role: "user" | "assistant", content: string, pending = false) {
     const el = document.createElement("div");
     el.className = `boby-chat-msg ${role}${pending ? " pending" : ""}`;
-    el.textContent = content;
+    if (pending) {
+        el.innerHTML = "<span class=\"boby-typing-dots\"><span></span><span></span><span></span></span>";
+    } else {
+        el.textContent = content;
+    }
     container.appendChild(el);
     container.scrollTop = container.scrollHeight;
     return el;
+}
+
+function resolvePendingMessage(el: HTMLElement, text: string) {
+    el.textContent = text; // remplace aussi les points de "typing" (innerHTML) par du texte simple
+    el.classList.remove("pending");
 }
 
 async function sendMessage(messagesEl: HTMLElement, text: string) {
@@ -148,7 +207,7 @@ async function sendMessage(messagesEl: HTMLElement, text: string) {
     const historyBeforeReply = history.slice();
     history.push({ role: "user", content: text });
 
-    const pendingEl = appendMessage(messagesEl, "assistant", "...", true);
+    const pendingEl = appendMessage(messagesEl, "assistant", "", true);
 
     try {
         const res = await fetch(getApiUrl(), {
@@ -158,28 +217,30 @@ async function sendMessage(messagesEl: HTMLElement, text: string) {
         });
         const data = await res.json();
         const reply = res.ok ? (data.reply ?? "J'ai rien a dire, essaie de reformuler.") : (data.error ?? "J'ai buggue, ressaie.");
-        pendingEl.textContent = reply;
-        pendingEl.classList.remove("pending");
+        resolvePendingMessage(pendingEl, reply);
         if (res.ok) history.push({ role: "assistant", content: reply });
     } catch {
-        pendingEl.textContent = "Boby dort, son serveur ne repond pas.";
-        pendingEl.classList.remove("pending");
+        resolvePendingMessage(pendingEl, "Boby dort, son serveur ne repond pas.");
     } finally {
         messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 }
 
+const PANEL_TRANSITION_MS = 200;
+
 function togglePanel() {
     if (panelEl) {
-        panelEl.remove();
-        panelEl = null;
+        const panel = panelEl;
+        panelEl = null; // ferme tout de suite pour eviter un double-clic pendant l'animation
+        panel.classList.add("boby-panel-closing");
+        window.setTimeout(() => panel.remove(), PANEL_TRANSITION_MS);
         return;
     }
 
     ensureChatStyles();
 
     const panel = document.createElement("div");
-    panel.className = "boby-chat-panel";
+    panel.className = "boby-chat-panel boby-panel-enter";
     panel.innerHTML =
         "<div class=\"boby-chat-header\"><span>Boby</span><button class=\"boby-chat-close\">✕</button></div>" +
         "<div class=\"boby-chat-messages\"></div>" +
@@ -189,6 +250,12 @@ function togglePanel() {
         "</div>";
     document.body.appendChild(panel);
     panelEl = panel;
+
+    // double rAF: laisse le navigateur peindre l'etat "enter" avant de le retirer,
+    // sinon la transition CSS ne se declenche pas (pas de changement detecte).
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => panel.classList.remove("boby-panel-enter"));
+    });
 
     const messagesEl = panel.querySelector<HTMLElement>(".boby-chat-messages")!;
     const inputEl = panel.querySelector<HTMLTextAreaElement>(".boby-chat-input")!;
