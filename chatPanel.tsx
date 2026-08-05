@@ -39,6 +39,21 @@ let toggleEl: HTMLElement | null = null;
 let cleanupDrag: (() => void) | null = null;
 let history: ChatMessage[] = [];
 let getApiUrl: () => string = () => "https://jah.qdnx.fr/api/chat";
+let lastContextChannelId: string | null = null;
+
+// Si on change de salon Discord, l'ancien fil de discussion avec Boby (deja
+// oriente sur un autre sujet) fausse ses reponses meme si le nouveau
+// discordContext est correct. On repart de zero des qu'on change de salon.
+function resetHistoryIfChannelChanged(messagesEl: HTMLElement) {
+    const channelId = SelectedChannelStore.getChannelId();
+    if (!channelId) return;
+
+    if (lastContextChannelId !== null && channelId !== lastContextChannelId && history.length) {
+        history = [];
+        messagesEl.innerHTML = "";
+    }
+    lastContextChannelId = channelId;
+}
 
 const STYLE_ID = "boby-chat-panel-style";
 
@@ -226,6 +241,7 @@ function resolvePendingMessage(el: HTMLElement, text: string) {
 }
 
 async function sendMessage(messagesEl: HTMLElement, text: string) {
+    resetHistoryIfChannelChanged(messagesEl);
     appendMessage(messagesEl, "user", text);
     const historyBeforeReply = history.slice();
     history.push({ role: "user", content: text });
