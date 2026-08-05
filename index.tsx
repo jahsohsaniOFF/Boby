@@ -206,7 +206,7 @@ const settings = definePluginSettings({
     chatApiUrl: {
         type: OptionType.STRING,
         description: "URL de l'API chat de Boby",
-        default: "https://jah.qdnx.fr/api/chat",
+        default: "http://127.0.0.1:8787/api/chat",
     },
 });
 
