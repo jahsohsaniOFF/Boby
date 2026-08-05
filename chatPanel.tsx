@@ -4,11 +4,34 @@
  * WEB_ENABLED=true, endpoint POST /api/chat).
  */
 
+import { MessageStore, SelectedChannelStore } from "@webpack/common";
+
 import { makeDraggable } from "./draggable";
 
 interface ChatMessage {
     role: "user" | "assistant";
     content: string;
+}
+
+const CONTEXT_MESSAGE_LIMIT = 12;
+
+// Recupere les derniers messages du salon Discord actuellement affiche, pour
+// que Boby ait le contexte de la conversation en cours quand on lui pose une
+// question (ex: verifier une info citee juste au-dessus dans le salon).
+function getRecentChannelContext(): string {
+    const channelId = SelectedChannelStore.getChannelId();
+    if (!channelId) return "";
+
+    const messages = (MessageStore.getMessages(channelId) as any)?._array as
+        | { author?: { username?: string; }; content?: string; }[]
+        | undefined;
+    if (!messages?.length) return "";
+
+    return messages
+        .slice(-CONTEXT_MESSAGE_LIMIT)
+        .filter(m => m.content)
+        .map(m => `${m.author?.username ?? "?"}: ${m.content}`)
+        .join("\n");
 }
 
 let panelEl: HTMLElement | null = null;
@@ -213,7 +236,11 @@ async function sendMessage(messagesEl: HTMLElement, text: string) {
         const res = await fetch(getApiUrl(), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: text, history: historyBeforeReply }),
+            body: JSON.stringify({
+                message: text,
+                history: historyBeforeReply,
+                discordContext: getRecentChannelContext(),
+            }),
         });
         const data = await res.json();
         const reply = res.ok ? (data.reply ?? "J'ai rien a dire, essaie de reformuler.") : (data.error ?? "J'ai buggue, ressaie.");
@@ -284,6 +311,16 @@ function togglePanel() {
     });
 
     inputEl.focus();
+}
+
+// Ouvre le panneau (s'il est ferme) et pose direct une question a Boby a
+// propos du texte donne - utilise par le bouton "Demander a Boby" qui
+// apparait quand on selectionne du texte a l'ecran (voir selection.ts).
+export function askBobyAbout(text: string) {
+    if (!panelEl) togglePanel();
+    const messagesEl = panelEl?.querySelector<HTMLElement>(".boby-chat-messages");
+    if (!messagesEl) return;
+    void sendMessage(messagesEl, `Verifie ou explique ca : "${text}"`);
 }
 
 export function mountChatPanel(apiUrlGetter: () => string) {

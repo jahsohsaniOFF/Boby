@@ -13,6 +13,7 @@ import type { Message } from "@vencord/discord-types";
 
 import { startAtariBreakout, stopAtariBreakout } from "./breakout";
 import { mountChatPanel, unmountChatPanel } from "./chatPanel";
+import { mountSelectionHelper, unmountSelectionHelper } from "./selection";
 
 const Native = VencordNative.pluginHelpers.Boby as PluginNative<typeof import("./native")>;
 
@@ -193,8 +194,13 @@ const settings = definePluginSettings({
         description: "Affiche le bouton de chat flottant pour parler a Boby n'importe quand",
         default: true,
         onChange(newValue: boolean) {
-            if (newValue) mountChatPanel(() => settings.store.chatApiUrl);
-            else unmountChatPanel();
+            if (newValue) {
+                mountChatPanel(() => settings.store.chatApiUrl);
+                mountSelectionHelper();
+            } else {
+                unmountChatPanel();
+                unmountSelectionHelper();
+            }
         },
     },
     chatApiUrl: {
@@ -213,6 +219,7 @@ export default definePlugin({
     start() {
         if (settings.store.chatPanelEnabled) {
             mountChatPanel(() => settings.store.chatApiUrl);
+            mountSelectionHelper();
         }
     },
 
@@ -220,6 +227,7 @@ export default definePlugin({
         stopMadeHeaven();
         stopAtariBreakout();
         unmountChatPanel();
+        unmountSelectionHelper();
     },
 
     flux: {
