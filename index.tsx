@@ -206,7 +206,7 @@ const settings = definePluginSettings({
     chatApiUrl: {
         type: OptionType.STRING,
         description: "URL de l'API chat de Boby",
-        default: "http://127.0.0.1:8787/api/chat",
+        default: "https://bobyprvcode.onrender.com/api/chat",
     },
 });
 

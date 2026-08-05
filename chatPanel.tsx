@@ -38,7 +38,7 @@ let panelEl: HTMLElement | null = null;
 let toggleEl: HTMLElement | null = null;
 let cleanupDrag: (() => void) | null = null;
 let history: ChatMessage[] = [];
-let getApiUrl: () => string = () => "http://127.0.0.1:8787/api/chat";
+let getApiUrl: () => string = () => "https://bobyprvcode.onrender.com/api/chat";
 let lastContextChannelId: string | null = null;
 
 // Si on change de salon Discord, l'ancien fil de discussion avec Boby (deja
