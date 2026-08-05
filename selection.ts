@@ -19,7 +19,6 @@ function ensureStyles() {
         .boby-ask-btn {
             position: fixed;
             z-index: 2147483646;
-            transform: translate(-50%, -100%);
             background: #5865f2;
             color: #fff;
             border: none;
@@ -35,8 +34,8 @@ function ensureStyles() {
         }
         .boby-ask-btn:hover { filter: brightness(1.1); }
         @keyframes boby-ask-in {
-            from { opacity: 0; transform: translate(-50%, -95%) scale(0.9); }
-            to { opacity: 1; transform: translate(-50%, -100%) scale(1); }
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
         @media (prefers-reduced-motion: reduce) {
             .boby-ask-btn { animation: none; }
@@ -59,8 +58,9 @@ function showButton(rect: DOMRect, text: string) {
     const btn = document.createElement("button");
     btn.className = "boby-ask-btn";
     btn.textContent = "💬 Demander à Boby";
-    btn.style.left = `${rect.left + rect.width / 2}px`;
-    btn.style.top = `${Math.max(8, rect.top - 8)}px`;
+    btn.style.visibility = "hidden";
+    btn.style.left = "0px";
+    btn.style.top = "0px";
 
     // Empeche le mousedown sur le bouton d'effacer la selection avant le clic.
     btn.addEventListener("mousedown", e => e.preventDefault());
@@ -72,6 +72,22 @@ function showButton(rect: DOMRect, text: string) {
 
     document.body.appendChild(btn);
     btnEl = btn;
+
+    // Mesure la taille reelle du bouton pour le garder dans l'ecran: sans ca,
+    // un decalage fixe pouvait le placer au-dessus du bord haut de la fenetre
+    // (donc invisible) quand la selection est proche du haut de l'ecran.
+    const margin = 8;
+    const { width: btnWidth, height: btnHeight } = btn.getBoundingClientRect();
+
+    let left = rect.left + rect.width / 2 - btnWidth / 2;
+    left = Math.min(Math.max(margin, left), window.innerWidth - btnWidth - margin);
+
+    let top = rect.top - margin - btnHeight;
+    if (top < margin) top = rect.bottom + margin;
+
+    btn.style.left = `${left}px`;
+    btn.style.top = `${top}px`;
+    btn.style.visibility = "visible";
 }
 
 function onMouseUp() {
