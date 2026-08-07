@@ -2,7 +2,7 @@
 
 Userplugin perso pour [Equicord](https://github.com/Equicord/Equicord) (fork de Vencord).
 
-Contient quelques easter eggs caches declenches par des mots-cles dans le chat, et un panneau de chat flottant pour parler a Boby n'importe quand. Les easter eggs sont volontairement non-documentes ici — a toi de les trouver.
+un panneau de chat flottant pour parler a Boby n'importe quand.
 
 Le panneau de chat (optionnel, desactivable dans les reglages du plugin) se connecte a un bot personnel via une API HTTP locale. **Ne marchera pas** sans ton propre serveur compatible tournant en local (voir `chatApiUrl` dans les reglages) - desactive `chatPanelEnabled` si tu n'as pas ce backend.
 
