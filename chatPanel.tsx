@@ -39,6 +39,7 @@ let toggleEl: HTMLElement | null = null;
 let cleanupDrag: (() => void) | null = null;
 let history: ChatMessage[] = [];
 let getApiUrl: () => string = () => "https://bobyprvcode.onrender.com/api/chat";
+let getApiToken: () => string = () => "";
 let lastContextChannelId: string | null = null;
 
 // Si on change de salon Discord, l'ancien fil de discussion avec Boby (deja
@@ -249,9 +250,13 @@ async function sendMessage(messagesEl: HTMLElement, text: string) {
     const pendingEl = appendMessage(messagesEl, "assistant", "", true);
 
     try {
+        const token = getApiToken();
         const res = await fetch(getApiUrl(), {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
             body: JSON.stringify({
                 message: text,
                 history: historyBeforeReply,
@@ -339,8 +344,9 @@ export function askBobyAbout(text: string) {
     void sendMessage(messagesEl, `Verifie ou explique ca : "${text}"`);
 }
 
-export function mountChatPanel(apiUrlGetter: () => string) {
+export function mountChatPanel(apiUrlGetter: () => string, apiTokenGetter: () => string = () => "") {
     getApiUrl = apiUrlGetter;
+    getApiToken = apiTokenGetter;
     if (toggleEl) return;
 
     ensureChatStyles();

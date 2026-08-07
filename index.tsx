@@ -195,7 +195,7 @@ const settings = definePluginSettings({
         default: true,
         onChange(newValue: boolean) {
             if (newValue) {
-                mountChatPanel(() => settings.store.chatApiUrl);
+                mountChatPanel(() => settings.store.chatApiUrl, () => settings.store.chatApiToken);
                 mountSelectionHelper();
             } else {
                 unmountChatPanel();
@@ -208,6 +208,11 @@ const settings = definePluginSettings({
         description: "URL de l'API chat de Boby",
         default: "https://bobyprvcode.onrender.com/api/chat",
     },
+    chatApiToken: {
+        type: OptionType.STRING,
+        description: "Jeton d'acces pour l'API chat de Boby (fourni par jahsohsani, laisser vide si aucun)",
+        default: "",
+    },
 });
 
 export default definePlugin({
@@ -218,7 +223,7 @@ export default definePlugin({
 
     start() {
         if (settings.store.chatPanelEnabled) {
-            mountChatPanel(() => settings.store.chatApiUrl);
+            mountChatPanel(() => settings.store.chatApiUrl, () => settings.store.chatApiToken);
             mountSelectionHelper();
         }
     },
