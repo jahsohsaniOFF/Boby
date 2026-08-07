@@ -298,7 +298,7 @@
   <div class="wrap">
     <p class="kicker">Tutoriel</p>
     <h1>Installer Boby, étape par étape</h1>
-    <p class="lede">Choisis ta méthode ci-dessous. La première est recommandée si tu as déjà Equicord installé en build source.</p>
+    <p class="lede">Choisis ta méthode ci-dessous. La première marche même si tu n'as pas encore Equicord — elle installe tout toute seule.</p>
   </div>
 </header>
 
@@ -306,10 +306,41 @@
 
   <section class="method">
     <div class="method-head">
-      <h2>Méthode 1 — Panneau UserPlugins</h2>
+      <h2>Méthode 1 — Script automatique (Windows)</h2>
       <span class="method-tag">Recommandé</span>
     </div>
-    <p class="method-note">Depuis Discord, sans toucher au terminal.</p>
+    <p class="method-note">Un seul fichier à lancer. Il installe Git et Node.js si besoin, clone Equicord et le plugin Boby, build et injecte dans Discord tout seul — pas de prérequis.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Télécharge et lance le script</h3>
+          <p>Double-clique sur le fichier téléchargé, ou colle ceci dans PowerShell :</p>
+          <div class="code-block">
+            <button class="copy-btn" data-copy="irm https://raw.githubusercontent.com/jahsohsaniOFF/Boby/main/install-equicord-dev.bat -OutFile install-equicord-dev.bat&#10;.\install-equicord-dev.bat">Copier</button>
+            <pre><span class="prompt">$</span> irm https://raw.githubusercontent.com/jahsohsaniOFF/Boby/main/install-equicord-dev.bat -OutFile install-equicord-dev.bat
+<span class="prompt">$</span> .\install-equicord-dev.bat</pre>
+          </div>
+          <p><a href="https://raw.githubusercontent.com/jahsohsaniOFF/Boby/main/install-equicord-dev.bat">Ou télécharge directement le fichier →</a></p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>C'est fait</h3>
+          <p>Le script ferme Discord tout seul avant d'injecter. Relance Discord, le plugin Boby est dans <code>Réglages → Equicord → Plugins</code>. Pour mettre à jour plus tard, relance le même fichier.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="method">
+    <div class="method-head">
+      <h2>Méthode 2 — Panneau UserPlugins</h2>
+    </div>
+    <p class="method-note">Depuis Discord, sans toucher au terminal — si tu as déjà Equicord installé en build source.</p>
 
     <div class="steps">
       <div class="step">
@@ -370,20 +401,21 @@ https://github.com/jahsohsaniOFF/Boby</pre>
 
   <section class="method">
     <div class="method-head">
-      <h2>Méthode 2 — Manuelle</h2>
+      <h2>Méthode 3 — Manuelle</h2>
     </div>
-    <p class="method-note">Si tu préfères tout faire depuis un terminal. Pas besoin de captures ici, ce ne sont que des commandes.</p>
+    <p class="method-note">Si tu préfères tout faire depuis un terminal, et que tu as déjà Equicord installé en build source. Pas besoin de captures ici, ce ne sont que des commandes.</p>
 
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-body">
-          <h3>Clone, build, injecte</h3>
+          <h3>Clone, installe, build, injecte</h3>
           <p>Depuis la racine de ta copie d'Equicord :</p>
           <div class="code-block">
-            <button class="copy-btn" data-copy="git clone https://github.com/jahsohsaniOFF/Boby.git src/userplugins/boby&#10;pnpm build --dev&#10;pnpm inject">Copier</button>
-            <pre><span class="prompt">$</span> git clone https://github.com/jahsohsaniOFF/Boby.git src/userplugins/boby
-<span class="prompt">$</span> pnpm build --dev
+            <button class="copy-btn" data-copy="git clone https://github.com/jahsohsaniOFF/Boby.git src/userplugins/bobyEasterEggs&#10;pnpm install&#10;pnpm build&#10;pnpm inject">Copier</button>
+            <pre><span class="prompt">$</span> git clone https://github.com/jahsohsaniOFF/Boby.git src/userplugins/bobyEasterEggs
+<span class="prompt">$</span> pnpm install
+<span class="prompt">$</span> pnpm build
 <span class="prompt">$</span> pnpm inject</pre>
           </div>
         </div>
@@ -394,11 +426,11 @@ https://github.com/jahsohsaniOFF/Boby</pre>
         <div class="step-body">
           <h3>Pour mettre à jour plus tard</h3>
           <div class="code-block">
-            <button class="copy-btn" data-copy="cd src/userplugins/boby&#10;git pull&#10;cd ../../..&#10;pnpm build --dev&#10;pnpm inject">Copier</button>
-            <pre><span class="prompt">$</span> cd src/userplugins/boby
+            <button class="copy-btn" data-copy="cd src/userplugins/bobyEasterEggs&#10;git pull&#10;cd ../../..&#10;pnpm build&#10;pnpm inject">Copier</button>
+            <pre><span class="prompt">$</span> cd src/userplugins/bobyEasterEggs
 <span class="prompt">$</span> git pull
 <span class="prompt">$</span> cd ../../..
-<span class="prompt">$</span> pnpm build --dev
+<span class="prompt">$</span> pnpm build
 <span class="prompt">$</span> pnpm inject</pre>
           </div>
         </div>

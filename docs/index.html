@@ -602,8 +602,30 @@
   <section id="installer">
     <div class="section-head">
       <p class="kicker">Installation</p>
-      <h2>Deux façons de l'installer</h2>
-      <p class="lede">Dans les deux cas, il faut une build source d'Equicord — l'installeur classique ne peut pas charger de plugin custom.</p>
+      <h2>Trois façons de l'installer</h2>
+      <p class="lede">Le script automatique installe tout, y compris Equicord — c'est le plus simple si tu pars de zéro. Les deux autres méthodes supposent qu'Equicord est déjà installé en build source.</p>
+    </div>
+
+    <div class="term" style="margin-bottom: 22px;">
+      <div class="term-bar">
+        <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
+        <span class="term-title">Script automatique — Windows</span>
+        <span class="term-recommended">Recommandé</span>
+      </div>
+      <div class="term-body">
+        <ol>
+          <li>Télécharge <code>install-equicord-dev.bat</code> et double-clique dessus.</li>
+          <li>Il installe Git/Node.js si besoin, clone Equicord et Boby, build, puis injecte dans Discord — sans aucune manipulation en plus.</li>
+          <li>Pour mettre à jour plus tard, relance le même fichier.</li>
+        </ol>
+        <div class="code-block">
+          <button class="copy-btn" data-copy="irm https://raw.githubusercontent.com/jahsohsaniOFF/Boby/main/install-equicord-dev.bat -OutFile install-equicord-dev.bat&#10;.\install-equicord-dev.bat">Copier</button>
+          <pre><span class="comment"># Telecharge et lance en une commande (PowerShell)</span>
+<span class="prompt">$</span> irm https://raw.githubusercontent.com/jahsohsaniOFF/Boby/main/install-equicord-dev.bat -OutFile install-equicord-dev.bat
+<span class="prompt">$</span> .\install-equicord-dev.bat</pre>
+        </div>
+        <p style="margin: 14px 0 0; font-size: .85rem; color: var(--ink-dim);">Ou <a href="https://raw.githubusercontent.com/jahsohsaniOFF/Boby/main/install-equicord-dev.bat">telecharge directement le fichier</a> et double-clique dessus. Ferme Discord avant si possible, le script le fait aussi tout seul.</p>
+      </div>
     </div>
 
     <div class="install-grid">
@@ -611,7 +633,6 @@
         <div class="term-bar">
           <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
           <span class="term-title">Réglages Discord</span>
-          <span class="term-recommended">Recommandé</span>
         </div>
         <div class="term-body">
           <ol>
@@ -636,14 +657,14 @@ https://github.com/jahsohsaniOFF/Boby</pre>
         <div class="term-body">
           <ol>
             <li>Clone le dépôt dans <code>src/userplugins</code>.</li>
-            <li>Build en mode dev et injecte.</li>
+            <li>Installe les dépendances, build, injecte.</li>
             <li>Mise à jour plus tard : <code>git pull</code> puis rebuild.</li>
           </ol>
           <div class="code-block">
-            <button class="copy-btn" data-copy="git clone https://github.com/jahsohsaniOFF/Boby.git src/userplugins/boby&#10;cd equicord&#10;pnpm build --dev&#10;pnpm inject">Copier</button>
-            <pre><span class="prompt">$</span> git clone https://github.com/jahsohsaniOFF/Boby.git src/userplugins/boby
-<span class="prompt">$</span> cd equicord
-<span class="prompt">$</span> pnpm build --dev
+            <button class="copy-btn" data-copy="git clone https://github.com/jahsohsaniOFF/Boby.git src/userplugins/bobyEasterEggs&#10;pnpm install&#10;pnpm build&#10;pnpm inject">Copier</button>
+            <pre><span class="prompt">$</span> git clone https://github.com/jahsohsaniOFF/Boby.git src/userplugins/bobyEasterEggs
+<span class="prompt">$</span> pnpm install
+<span class="prompt">$</span> pnpm build
 <span class="prompt">$</span> pnpm inject</pre>
           </div>
         </div>
