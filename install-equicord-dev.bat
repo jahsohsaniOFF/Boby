@@ -18,6 +18,10 @@ echo(
 echo Dossier d'installation : %INSTALL_DIR%
 echo(
 
+echo Fermeture de Discord s'il est ouvert...
+taskkill /IM Discord.exe /F >nul 2>nul
+echo(
+
 call :refresh_path
 
 echo [1/7] Verification de Git...
@@ -109,7 +113,6 @@ call pnpm build
 if errorlevel 1 goto :fail_popd
 
 echo [7/7] Injection dans le client Discord ^(branche: %DISCORD_BRANCH%^)...
-echo       Fermeture de Discord s'il est ouvert...
 taskkill /IM Discord.exe /F >nul 2>nul
 call node scripts\runInstaller.mjs -- --install --branch %DISCORD_BRANCH%
 if errorlevel 1 goto :fail_popd
